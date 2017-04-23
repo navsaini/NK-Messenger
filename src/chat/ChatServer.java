@@ -5,6 +5,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+// hello
+
 public class ChatServer extends Observable {
 	private ArrayList<PrintWriter> clientOutputStreams;
 	
