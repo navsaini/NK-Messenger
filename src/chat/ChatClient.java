@@ -12,10 +12,19 @@ public class ChatClient {
 	private BufferedReader reader;
 	private PrintWriter writer;
 	
-	static int count = 0;
+	static int count = 1;
 	
 	public static void main(String[] args) {
 		try {
+			new ChatClient().run();
+			new ChatClient().run();
+			new ChatClient().run();
+			new ChatClient().run();
+			new ChatClient().run();
+			new ChatClient().run();
+			new ChatClient().run();
+			new ChatClient().run();
+			new ChatClient().run();
 			new ChatClient().run();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,6 +68,10 @@ public class ChatClient {
 		readerThread.start();
 	}
 
+	/**
+	 * writes messages to the server
+	 *
+	 */
 	class SendButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
 			System.out.println("action performed: " + count);
@@ -70,6 +83,7 @@ public class ChatClient {
 		}
 	}
 
+	// reads incoming messages from the server
 	class IncomingReader implements Runnable {
 		public void run() {
 			String message;
