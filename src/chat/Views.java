@@ -15,15 +15,9 @@ public class Views extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		VBox vbox = new VBox(5);
-		Stage nextStage = new Stage();
-		VBox nextVbox = new VBox(5);
-		try {
-			Painter.addWindow(stage, vbox, new ChatClient());
-			Painter.addWindow(nextStage, nextVbox, new ChatClient());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+		new ChatClient().run();
+		new ChatClient().run();
+		new ChatClient().run();
 	}
 
 }

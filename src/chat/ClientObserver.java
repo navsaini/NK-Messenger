@@ -6,6 +6,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ClientObserver extends PrintWriter implements Observer {
+	Object lock = new Object();
+	
 	public ClientObserver(OutputStream out) {
 		super(out);
 	}
@@ -15,8 +17,10 @@ public class ClientObserver extends PrintWriter implements Observer {
 	public void update(Observable o, Object arg) {
 		System.out.println("update called count: " + ChatClient.count);
 		ChatClient.count++;
-		this.println(arg);
-		this.flush();
+		synchronized(lock) {
+			this.println(arg);
+			this.flush();
+		}
 	}
 
 }
