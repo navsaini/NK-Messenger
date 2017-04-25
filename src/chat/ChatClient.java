@@ -21,7 +21,11 @@ public class ChatClient {
 	private TextArea chatSpace;
 	private TextField messageToSend;
 	
-	static int count = 1;
+	private String clientName;
+	
+	public ChatClient(String clientName) {
+		this.clientName = clientName;
+	}
 	
 	public void run() throws Exception {
 		Stage stage = new Stage();
@@ -72,18 +76,21 @@ public class ChatClient {
 			writer.flush();
 			messageToSend.setText("");
 		}
-		
 	}
 
-	// reads incoming messages from the server
+	/**
+	 * reads incoming messages from the server
+	 *
+	 */
 	class IncomingReader implements Runnable {
 		public void run() {
 			String message;
 			try {
 				while ((message = reader.readLine()) != null) {
-					System.out.println("incoming append count: " + count);
-					count++;
-					chatSpace.appendText(message + "\n");
+					if (message.contains("@" + clientName))
+						chatSpace.appendText(message + "\n");
+					else 
+						chatSpace.appendText(message + "\n");
 				}
 			} catch (IOException ex) {
 				ex.printStackTrace();

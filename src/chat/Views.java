@@ -15,9 +15,8 @@ public class Views extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		new ChatClient().run();
-		new ChatClient().run();
-		new ChatClient().run();
+		new ChatClient("Nav").run();
+		new ChatClient("Kausthub").run();
 	}
 
 }

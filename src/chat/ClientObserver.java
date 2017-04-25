@@ -5,9 +5,7 @@ import java.io.PrintWriter;
 import java.util.Observable;
 import java.util.Observer;
 
-public class ClientObserver extends PrintWriter implements Observer {
-	Object lock = new Object();
-	
+public class ClientObserver extends PrintWriter implements Observer {	
 	public ClientObserver(OutputStream out) {
 		super(out);
 	}
@@ -15,12 +13,9 @@ public class ClientObserver extends PrintWriter implements Observer {
 	// sending message back to client
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("update called count: " + ChatClient.count);
-		ChatClient.count++;
-		synchronized(lock) {
-			this.println(arg);
-			this.flush();
-		}
+		this.println(arg);
+		this.flush();
+
 	}
 
 }

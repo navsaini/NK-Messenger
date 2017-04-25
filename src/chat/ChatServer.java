@@ -7,7 +7,6 @@ import java.net.Socket;
 
 public class ChatServer extends Observable {
 	private ArrayList<PrintWriter> clientOutputStreams;
-	static int num = 1;
 	
 	public static void main(String[] args) {
 		try {
@@ -29,8 +28,6 @@ public class ChatServer extends Observable {
 			Socket clientSocket = serverSock.accept();
 			ClientObserver writer = new ClientObserver(clientSocket.getOutputStream());
 			ClientHandler c = new ClientHandler(clientSocket);
-			c.setName("" + num);
-			num++;
 			Thread t = new Thread(c);
 			t.start();
 			this.addObserver(writer);
@@ -40,7 +37,6 @@ public class ChatServer extends Observable {
 		
 	class ClientHandler implements Runnable {
 		private BufferedReader reader;
-		String name;
 		
 		public ClientHandler(Socket clientSocket) throws IOException {
 			Socket sock = clientSocket;
@@ -51,21 +47,14 @@ public class ChatServer extends Observable {
 			}
 		}
 		
-		public String setName(String name) {
-			this.name = name;
-			return name;
-		}
-		
 		// reads messages sent to server
 		@Override
 		public void run() {
 			String message;
 			try {
 				while ((message = reader.readLine()) != null) {
-					System.out.println("server read with the following count: " + ChatClient.count);
-					ChatClient.count++;
 					setChanged();
-					notifyObservers(name + ": " + message);
+					notifyObservers(message);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
