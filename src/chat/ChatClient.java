@@ -2,59 +2,22 @@ package chat;
 
 import java.io.*;
 import java.net.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.event.ActionEvent;
 
 public class ChatClient {
-	private JTextArea incoming; 
-	private JTextField outgoing;
 	private BufferedReader reader;
 	private PrintWriter writer;
 	
 	static int count = 1;
 	
-	public static void main(String[] args) {
-		try {
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-			new ChatClient().run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void run() throws Exception {
-		initView();
 		setUpNetworking();
-	}
-
-	private void initView() {
-		JFrame frame = new JFrame("Ludicrously Simple Chat Client"); 
-		JPanel mainPanel = new JPanel(); 
-		incoming = new JTextArea(15, 50); 
-		incoming.setLineWrap(true); 
-		incoming.setWrapStyleWord(true); 
-		incoming.setEditable(false); 
-		JScrollPane qScroller = new JScrollPane(incoming);
-		qScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		outgoing = new JTextField(20); 
-		JButton sendButton = new JButton("Send"); 
-		sendButton.addActionListener(new SendButtonListener()); 
-		mainPanel.add(qScroller); 
-		mainPanel.add(outgoing); 
-		mainPanel.add(sendButton); 
-		frame.getContentPane().add(BorderLayout.CENTER, mainPanel); 
-		frame.setSize(650, 500); 
-		frame.setVisible(true);
 	}
 
 	private void setUpNetworking() throws Exception {
@@ -72,15 +35,20 @@ public class ChatClient {
 	 * writes messages to the server
 	 *
 	 */
-	class SendButtonListener implements ActionListener {
-		public void actionPerformed(ActionEvent ev) {
-			System.out.println("action performed: " + count);
-			count++;
-			writer.println(outgoing.getText());
-			writer.flush();
-			outgoing.setText("");
-			outgoing.requestFocus();
+	class SendButtonListener implements EventHandler<ActionEvent> {	
+		TextField messageField;
+		
+		public SendButtonListener(TextField messageField) {
+			this.messageField = messageField;
 		}
+		
+		@Override
+		public void handle(ActionEvent event) {
+			writer.println(messageField.getText());
+			writer.flush();
+			messageField.setText("");
+		}
+		
 	}
 
 	// reads incoming messages from the server
@@ -91,7 +59,13 @@ public class ChatClient {
 				while ((message = reader.readLine()) != null) {
 					System.out.println("incoming append count: " + count);
 					count++;
-					incoming.append(message + "\n");
+					for (VBox vbox: Painter.vboxes) {
+						for (Object child: vbox.getChildren()) {
+							if (child instanceof TextArea) {
+								((TextArea) child).appendText(message + "\n");
+							}
+						}
+					}
 				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
