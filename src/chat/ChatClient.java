@@ -72,8 +72,10 @@ public class ChatClient {
 	class SendButtonListener implements EventHandler<ActionEvent> {			
 		@Override
 		public void handle(ActionEvent event) {
-			writer.println(messageToSend.getText());
+			writer.println(clientName + ": " + messageToSend.getText());
 			writer.flush();
+			if (messageToSend.getText().contains("@"))
+				chatSpace.appendText(clientName + ": " + messageToSend.getText() + "\n");
 			messageToSend.setText("");
 		}
 	}
@@ -89,7 +91,7 @@ public class ChatClient {
 				while ((message = reader.readLine()) != null) {
 					if (message.contains("@" + clientName))
 						chatSpace.appendText(message + "\n");
-					else 
+					else if (!message.contains("@"))
 						chatSpace.appendText(message + "\n");
 				}
 			} catch (IOException ex) {
