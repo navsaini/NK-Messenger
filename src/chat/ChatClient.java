@@ -25,6 +25,8 @@ public class ChatClient  {
 	
 	private String clientName;
 	
+	private Object lock = new Object();
+	
 	public ChatClient(String clientName) {
 		this.clientName = clientName;
 	}
@@ -90,12 +92,12 @@ public class ChatClient  {
 		@Override
 		public void handle(KeyEvent event) {
 			if (event.getCode() == KeyCode.ENTER) {
-			writer.println(clientName + ": " + messageToSend.getText());
-			writer.flush();
+				writer.println(clientName + ": " + messageToSend.getText());
+				writer.flush();
 			if (messageToSend.getText().contains("@"))
 				chatSpace.appendText(clientName + ": " + messageToSend.getText() + "\n");
-			messageToSend.setText("");
-		}
+				messageToSend.setText("");
+			}
 		}
 	}
 	
@@ -123,11 +125,13 @@ public class ChatClient  {
 		public void run() {
 			String message;
 			try {
-				while ((message = reader.readLine()) != null) {
-					if (message.contains("@" + clientName))
-						chatSpace.appendText(message + "\n");
-					else if (!message.contains("@"))
-						chatSpace.appendText(message + "\n");
+				synchronized (lock) {
+					while ((message = reader.readLine()) != null) {
+						if (message.contains("@" + clientName))
+							chatSpace.appendText(message + "\n");
+						else if (!message.contains("@"))
+							chatSpace.appendText(message + "\n");
+					}
 				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
