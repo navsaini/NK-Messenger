@@ -27,6 +27,9 @@ public class ChatClient  {
 	
 	private Object lock = new Object();
 	
+	private static int xPos = 0;
+	private static int yPos = 0;
+	
 	public ChatClient(String clientName) {
 		this.clientName = clientName;
 	}
@@ -44,6 +47,7 @@ public class ChatClient  {
 		String welcome = "Welcome " + this.clientName + "!\n";
 		chatSpace = new TextArea(welcome);
 		chatSpace.setEditable(false);
+		chatSpace.setWrapText(true);
 		vbox.getChildren().add(chatSpace);
 		
 		messageToSend = new TextField();
@@ -57,8 +61,9 @@ public class ChatClient  {
 		sendButton.setTranslateY(15);
 			    
 		stage.setScene(new Scene(vbox, 300, 300));
-	    stage.setX(0);
+	    stage.setX(xPos);
 	    stage.setY(0);
+	    xPos += 310;
 	    stage.show();
 	}
 	

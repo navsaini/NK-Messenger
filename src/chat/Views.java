@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 public class Views extends Application {
 	private static int numTalking = 0;
+	private static boolean errorNum = false;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -39,6 +40,12 @@ public class Views extends Application {
 		promptMessage.setWrapText(true);
 		promptAmountVbox.getChildren().add(promptMessage);
 		
+		Label errorMessage = new Label("Please enter a numerical amount");
+		errorMessage.setWrapText(true);
+		
+		if(errorNum) promptAmountVbox.getChildren().add(errorMessage);
+		
+		
 		TextField promptAmountField = new TextField();
 		promptAmountVbox.getChildren().add(promptAmountField);
 		
@@ -48,13 +55,21 @@ public class Views extends Application {
 		acceptAmount.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				numTalking = Integer.parseInt(promptAmountField.getText());
+				try {
+					numTalking = Integer.parseInt(promptAmountField.getText());
+				} 
+				catch (NumberFormatException numE) {
+					errorNum = true;
+					acceptAmount.getParent().getScene().getWindow().hide();
+					promptCount();
+					return;
+				}
 				acceptAmount.getParent().getScene().getWindow().hide();
 				promptNames();
 			}
 		});
 		
-		firstStage.setScene(new Scene(promptAmountVbox, 250, 100));
+		firstStage.setScene(new Scene(promptAmountVbox, 275, 110));
 	    firstStage.setX(0);
 	    firstStage.setY(0);
 	    firstStage.show();
