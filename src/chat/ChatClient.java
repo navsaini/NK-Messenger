@@ -2,6 +2,8 @@ package chat;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import chat.ChatClient.SendButtonListener;
 import javafx.event.Event;
@@ -24,6 +26,7 @@ public class ChatClient  {
 	private TextField messageToSend;
 	
 	private String clientName;
+	private List<Conversation> conversations;
 	
 	private Object lock = new Object();
 	
@@ -31,17 +34,18 @@ public class ChatClient  {
 	private static int yPos = 0;
 	
 	public ChatClient(String clientName) {
+		conversations = new ArrayList<Conversation>();
 		this.clientName = clientName;
 	}
 	
 	public void run() throws Exception {
-		Stage stage = new Stage();
-		VBox vbox = new VBox();
-		initView(stage, vbox);
+		initView();
 		setUpNetworking();
 	}
 
-	private void initView(Stage stage, VBox vbox) {
+	private void initView() {
+		Stage stage = new Stage();
+		VBox vbox = new VBox(5);
 		vbox.setPadding(new Insets(5));
 		
 		String welcome = "Welcome " + this.clientName + "!\n";
@@ -69,13 +73,14 @@ public class ChatClient  {
 	
 	private void setUpNetworking() throws Exception {
 		@SuppressWarnings("resource")
-		Socket sock = new Socket("127.0.0.1", 3000);
+		Socket sock = new Socket("172.16.14.66", 3000);
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 		reader = new BufferedReader(streamReader);
 		writer = new ClientObserver(sock.getOutputStream());
 		System.out.println("networking established");
 		Thread readerThread = new Thread(new IncomingReader());
 		readerThread.start();
+		writer.println("new client: " + this.clientName);
 	}
 
 	/**
@@ -106,22 +111,6 @@ public class ChatClient  {
 		}
 	}
 	
-//	messageToSend.setKeyOnPressed(new EventHandler<KeyEvent>()
-//    {
-//        @Override
-//        public void handle(KeyEvent ke)
-//        {
-//            if (ke.getCode().equals(KeyCode.ENTER))
-//            {
-//            	writer.println(clientName + ": " + messageToSend.getText());
-//    			writer.flush();
-//    			if (messageToSend.getText().contains("@"))
-//    				chatSpace.appendText(clientName + ": " + messageToSend.getText() + "\n");
-//    			messageToSend.setText("");
-//            }
-//        }
-//    });
-	
 	/**
 	 * reads incoming messages from the server
 	 *
@@ -132,7 +121,12 @@ public class ChatClient  {
 			try {
 				synchronized (lock) {
 					while ((message = reader.readLine()) != null) {
-						if (message.contains("@" + clientName))
+						if (message.contains("new client")) {
+							conversations.add(new Conversation(clientName, message.substring(message.indexOf(":"))));
+							System.out.println("new client");
+							initView();
+						}
+						else if (message.contains("@" + clientName))
 							chatSpace.appendText(message + "\n");
 						else if (!message.contains("@"))
 							chatSpace.appendText(message + "\n");

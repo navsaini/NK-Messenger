@@ -1,7 +1,5 @@
 package chat;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -24,10 +21,8 @@ public class Views extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		promptCount();
-//		new ChatClient("Nav").run();
-//		new ChatClient("Kausthub").run();
-//		new ChatClient("Moez").run();
+		numTalking = 1;
+		promptNames();
 	}
 	
 	public static void promptCount() {
@@ -81,7 +76,7 @@ public class Views extends Application {
 		
 		vbox.setPadding(new Insets(5));
 		
-		Label promptNames = new Label("Enter your names");
+		Label promptNames = new Label("Enter your name");
 		vbox.getChildren().add(promptNames);
 		
 		for (int k = 0; k < numTalking; k++) {

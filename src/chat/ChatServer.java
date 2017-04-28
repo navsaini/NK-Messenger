@@ -6,7 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ChatServer extends Observable {
-	private ArrayList<PrintWriter> clientOutputStreams;
+	List<String> users;
+	List<Thread> threads;
 	
 	public static void main(String[] args) {
 		try {
@@ -21,15 +22,16 @@ public class ChatServer extends Observable {
 	}
 	
 	private void setUpNetworking() throws Exception {
-		clientOutputStreams = new ArrayList<PrintWriter>();
+		users = new ArrayList<String>();
+		threads = new ArrayList<Thread>();
 		ServerSocket serverSock = new ServerSocket(3000);
 		
 		while (true) {
 			Socket clientSocket = serverSock.accept();
 			ClientObserver writer = new ClientObserver(clientSocket.getOutputStream());
-			ClientHandler c = new ClientHandler(clientSocket);
-			Thread t = new Thread(c);
+			Thread t = new Thread(new ClientHandler(clientSocket));
 			t.start();
+			threads.add(t);
 			this.addObserver(writer);
 			System.out.println("got a connection");
 		}
@@ -53,8 +55,15 @@ public class ChatServer extends Observable {
 			String message;
 			try {
 				while ((message = reader.readLine()) != null) {
-					setChanged();
-					notifyObservers(message);
+					if (message.contains("new client")) {
+						String newClientName = message.substring(message.indexOf(":")).trim();
+						users.add(newClientName);
+						setChanged();
+						notifyObservers("new client: " + newClientName);
+					} else {
+						setChanged();
+						notifyObservers(message);
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
