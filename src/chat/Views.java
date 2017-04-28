@@ -21,8 +21,7 @@ public class Views extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		numTalking = 1;
-		promptNames();
+		new ChatClient("Nav").run();
 	}
 	
 	public static void promptCount() {

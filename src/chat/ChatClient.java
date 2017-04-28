@@ -27,9 +27,7 @@ public class ChatClient  {
 	
 	private String clientName;
 	private List<Conversation> conversations;
-	
-	private Object lock = new Object();
-	
+		
 	private static int xPos = 0;
 	private static int yPos = 0;
 	
@@ -119,18 +117,15 @@ public class ChatClient  {
 		public void run() {
 			String message;
 			try {
-				synchronized (lock) {
-					while ((message = reader.readLine()) != null) {
-						if (message.contains("new client")) {
-							conversations.add(new Conversation(clientName, message.substring(message.indexOf(":"))));
-							System.out.println("new client");
-							initView();
-						}
-						else if (message.contains("@" + clientName))
-							chatSpace.appendText(message + "\n");
-						else if (!message.contains("@"))
-							chatSpace.appendText(message + "\n");
+				while ((message = reader.readLine()) != null) {
+					if (message.contains("new client")) {
+						conversations.add(new Conversation(clientName, message.substring(message.indexOf(":"))));
+						System.out.println("new client");
 					}
+					else if (message.contains("@" + clientName))
+						chatSpace.appendText(message + "\n");
+					else if (!message.contains("@"))
+						chatSpace.appendText(message + "\n");
 				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
