@@ -21,7 +21,6 @@ public class Views extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		new ChatClient("Nav").run();
 		new ChatClient("Moez").run();
 	}
 	
