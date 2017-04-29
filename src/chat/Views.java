@@ -23,6 +23,7 @@ public class Views extends Application {
 	public void start(Stage stage) throws Exception {
 		new ChatClient("Nav").run();
 	}
+
 	
 	public static void promptCount() {
 		Stage firstStage = new Stage();
@@ -38,7 +39,6 @@ public class Views extends Application {
 		errorMessage.setWrapText(true);
 		
 		if(errorNum) promptAmountVbox.getChildren().add(errorMessage);
-		
 		
 		TextField promptAmountField = new TextField();
 		promptAmountVbox.getChildren().add(promptAmountField);
@@ -104,6 +104,7 @@ public class Views extends Application {
 	    stage.setY(0);
 	    stage.show();
 	}
+	
 	
 	public static void createClient(String name) {
 		try {

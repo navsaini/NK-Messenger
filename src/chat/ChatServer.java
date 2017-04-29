@@ -60,6 +60,9 @@ public class ChatServer extends Observable {
 						users.add(newClientName);
 						setChanged();
 						notifyObservers("new client: " + newClientName);
+					} else if (message.contains("get conversations")) {
+						setChanged();
+						notifyObservers(users.toString());
 					} else {
 						setChanged();
 						notifyObservers(message);

@@ -5,8 +5,6 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import chat.ChatClient.SendButtonListener;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -32,14 +30,23 @@ public class ChatClient  {
 	private static int yPos = 0;
 	
 	public ChatClient(String clientName) {
-		conversations = new ArrayList<Conversation>();
+		this.conversations = new ArrayList<Conversation>();
 		this.clientName = clientName;
 	}
 	
 	public void run() throws Exception {
-		initView();
 		setUpNetworking();
+		initView();
 	}
+	
+//	private void listConversations() {
+//		Stage stage = new Stage();
+//		VBox vbox = new VBox(5);
+//		vbox.setPadding(new Insets(5));
+//		
+//		
+//		
+//	}
 
 	private void initView() {
 		Stage stage = new Stage();
@@ -71,14 +78,14 @@ public class ChatClient  {
 	
 	private void setUpNetworking() throws Exception {
 		@SuppressWarnings("resource")
-		Socket sock = new Socket("172.16.14.66", 3000);
+		Socket sock = new Socket("192.168.1.100", 3000);
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 		reader = new BufferedReader(streamReader);
 		writer = new ClientObserver(sock.getOutputStream());
+		writer.println("new client: " + this.clientName);
 		System.out.println("networking established");
 		Thread readerThread = new Thread(new IncomingReader());
 		readerThread.start();
-		writer.println("new client: " + this.clientName);
 	}
 
 	/**
@@ -122,10 +129,16 @@ public class ChatClient  {
 						conversations.add(new Conversation(clientName, message.substring(message.indexOf(":"))));
 						System.out.println("new client");
 					}
-					else if (message.contains("@" + clientName))
+					else if (message.contains("@" + clientName)) {
 						chatSpace.appendText(message + "\n");
-					else if (!message.contains("@"))
+						System.out.println("contains@");
+					}
+					else if (!message.contains("@")) {
 						chatSpace.appendText(message + "\n");
+						System.out.println("!contains@");
+					}
+					else 
+						System.out.println("none case");
 				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
