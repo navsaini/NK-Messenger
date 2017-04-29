@@ -21,6 +21,7 @@ public class ChatServer extends Observable {
 		setUpNetworking();
 	}
 	
+	@SuppressWarnings("resource")
 	private void setUpNetworking() throws Exception {
 		users = new ArrayList<String>();
 		threads = new ArrayList<Thread>();
@@ -56,13 +57,14 @@ public class ChatServer extends Observable {
 			try {
 				while ((message = reader.readLine()) != null) {
 					if (message.contains("new client")) {
-						String newClientName = message.substring(message.indexOf(":")).trim();
+						String newClientName = message.substring(message.indexOf(":") + 1).trim();
 						users.add(newClientName);
 						setChanged();
 						notifyObservers("new client: " + newClientName);
+						System.out.println(newClientName + " has joined");
 					} else if (message.contains("get conversations")) {
 						setChanged();
-						notifyObservers(users.toString());
+						notifyObservers("users: " + users.toString());
 					} else {
 						setChanged();
 						notifyObservers(message);

@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class Views extends Application {
 	private static int numTalking = 0;
-	private static boolean errorNum = false;
+//	private static boolean errorNum = false;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -22,51 +22,7 @@ public class Views extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		new ChatClient("Nav").run();
-	}
-
-	
-	public static void promptCount() {
-		Stage firstStage = new Stage();
-		VBox promptAmountVbox = new VBox(5);
-		
-		promptAmountVbox.setPadding(new Insets(5));
-		
-		Label promptMessage = new Label("How many people are chatting?");
-		promptMessage.setWrapText(true);
-		promptAmountVbox.getChildren().add(promptMessage);
-		
-		Label errorMessage = new Label("Please enter a numerical amount");
-		errorMessage.setWrapText(true);
-		
-		if(errorNum) promptAmountVbox.getChildren().add(errorMessage);
-		
-		TextField promptAmountField = new TextField();
-		promptAmountVbox.getChildren().add(promptAmountField);
-		
-		Button acceptAmount = new Button("Continue");
-		promptAmountVbox.getChildren().add(acceptAmount);
-		
-		acceptAmount.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					numTalking = Integer.parseInt(promptAmountField.getText());
-				} 
-				catch (NumberFormatException numE) {
-					errorNum = true;
-					acceptAmount.getParent().getScene().getWindow().hide();
-					promptCount();
-					return;
-				}
-				acceptAmount.getParent().getScene().getWindow().hide();
-				promptNames();
-			}
-		});
-		
-		firstStage.setScene(new Scene(promptAmountVbox, 275, 110));
-	    firstStage.setX(0);
-	    firstStage.setY(0);
-	    firstStage.show();
+		new ChatClient("Moez").run();
 	}
 	
 	public static void promptNames() {

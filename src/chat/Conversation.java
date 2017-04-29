@@ -8,12 +8,13 @@ public class Conversation {
 	List<String> receiver;
 	
 	public Conversation() {
-		receiver = new ArrayList<String>();
+		this.receiver = new ArrayList<String>();
 		this.sender = "";
 		this.receiver.add("");
 	}
 	
 	public Conversation(String sender, String receiver) {
+		this.receiver = new ArrayList<String>();
 		this.sender = sender;
 		this.receiver.add(receiver);
 	}
@@ -25,5 +26,10 @@ public class Conversation {
 			return conv.sender.equals(this.sender) && conv.receiver.equals(this.receiver);
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return ("sender: " + this.sender + ", receiver: " + this.receiver);
 	}
 }
