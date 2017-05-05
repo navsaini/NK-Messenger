@@ -92,6 +92,7 @@ public class ChatClient  {
 		}
 		
 		if(users.size() > 2) {
+			System.out.println("simple one called");
 			Button b = new Button("Chat with All");
 			b.setOnAction(new OpenChatListener());
 			list.getChildren().add(b);
@@ -145,7 +146,7 @@ public class ChatClient  {
 	
 	private void setUpNetworking() throws Exception {
 		@SuppressWarnings("resource")
-		Socket sock = new Socket("127.0.0.1", 3000);
+		Socket sock = new Socket("10.147.69.29", 3000);
 		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 		reader = new BufferedReader(streamReader);
 		writer = new ClientObserver(sock.getOutputStream());
@@ -299,7 +300,9 @@ public class ChatClient  {
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
+										System.out.println(conversations.size());
 										if (users.size() > 2 && allNeeded) {
+											System.out.println("complicated one called");
 											allNeeded = false;
 											Button b = new Button("Chat with All");
 											b.setOnAction(new OpenChatListener());

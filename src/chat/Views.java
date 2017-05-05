@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Views extends Application {
-	private static int numTalking = 3;
+	private static int numTalking = 2;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -20,7 +20,9 @@ public class Views extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		promptNames();
+		new ChatClient("Nav").run();
+		new ChatClient("Kush").run();
+		// promptNames();
 	}
 	
 	public static void promptNames() {
