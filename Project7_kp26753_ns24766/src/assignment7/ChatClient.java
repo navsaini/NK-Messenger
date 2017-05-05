@@ -275,11 +275,8 @@ public class ChatClient  {
 		public void run() {
 			String message;
 			try {
-//				synchronized(lock) {
+				synchronized(lock) {
 					while ((message = reader.readLine()) != null) {
-						
-						System.out.println("message that was sent out: " + message + " and the receiver: " + clientName);
-						System.out.println(message.contains("@" + clientName));
 						// if the message from the server has the keywords "new client"
 						if (message.contains("new client")) {
 							// since the message from the server has the pattern "new client: ..."
@@ -337,24 +334,15 @@ public class ChatClient  {
 								chatSpace.appendText(formattedMsg + "\n");
 							currentConversation.addTextToConv(formattedMsg);
 						}
-						else if (message.contains("@" + clientName) && currentConversation.receivers.size() == 1) {
-							int endSenderName = message.indexOf(":");
-							String senderName = message.substring(0, endSenderName).trim();
+						// add like message.contains(dkjfgsd) && message.isFrom(currentConversation.receiver)
+						else if (message.contains("@" + clientName)) {
 							int startName = message.indexOf("@");
 							String formattedMsg = message.substring(0, startName);
 							formattedMsg += message.substring(startName + clientName.length() + 1).trim();
-							if (senderName.equals(currentConversation.receivers.get(0))) {
-								if (chatSpace != null ) 
-									chatSpace.appendText(formattedMsg + "\n");
-								currentConversation.addTextToConv(formattedMsg);
-							} else {
-								for (Conversation c: conversations) {
-									if (c.receivers.size() == 1) {
-										if (c.receivers.get(0).equals(senderName)) 
-											c.addTextToConv(formattedMsg);
-									}
-								}
-							}
+							if (chatSpace != null) 
+								chatSpace.appendText(formattedMsg + "\n");
+							currentConversation.addTextToConv(formattedMsg);
+				
 						}
 						else if (!message.contains("@")) {
 							chatSpace.appendText(message + "\n");
@@ -363,7 +351,7 @@ public class ChatClient  {
 							System.out.println("none case");
 						}
 					}
-//				}
+				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			} 

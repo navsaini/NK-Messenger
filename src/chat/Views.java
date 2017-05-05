@@ -12,8 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Views extends Application {
-	private static int numTalking = 0;
-//	private static boolean errorNum = false;
+	private static int numTalking = 3;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -21,7 +20,7 @@ public class Views extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		new ChatClient("Moez").run();
+		promptNames();
 	}
 	
 	public static void promptNames() {
